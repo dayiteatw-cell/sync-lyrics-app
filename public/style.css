@@ -1,0 +1,275 @@
+:root {
+    --bg-color: #333333;
+    --text-color: #ffffff;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.4s ease;
+    overflow: hidden;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.screen {
+    display: none;
+    width: 100%;
+    min-height: 100%;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    padding: 15px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.screen.active {
+    display: flex;
+}
+
+h1 {
+    font-size: 1.5rem; /* 標題縮小 */
+    margin: 0.5rem 0 0.5rem 0;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.2);
+    width: 100%;
+    padding: 5px 0;
+}
+
+#controller-screen p {
+    font-size: 0.8rem;
+    margin: 0 0 0.5rem 0;
+    opacity: 0.7;
+}
+
+/* 歌曲選擇器 */
+.song-selector {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.song-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.song-btn.active {
+    background: #4A90E2;
+    border-color: #ffffff;
+    box-shadow: 0 0 20px rgba(74, 144, 226, 0.6);
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 400px;
+}
+
+button {
+    padding: 20px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.1s, box-shadow 0.2s;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+button:active {
+    transform: translateY(2px);
+}
+
+/* 控制面板網格 */
+.control-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px; /* 增加間隙防止誤觸 */
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px;
+}
+
+.part-btn {
+    padding: 25px 10px; /* 恢復較大的高度，增加命中率 */
+    font-size: 1.4rem;
+    border: none;
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+    border-radius: 15px; /* 圓角明顯一點 */
+}
+
+.part-btn.verse      { background-color: #4A90E2; }
+.part-btn.verse2     { background-color: #E67E22; }
+.part-btn.pre-chorus { background-color: #8E44AD; }
+.part-btn.chorus     { background-color: #2ECC71; }
+.part-btn.outro      { background-color: #F06292; }
+.part-btn.bridge     { background-color: #1A5276; }
+
+/* 恢復原本排列：主要段落佔滿兩列 */
+.part-btn.verse,
+.part-btn.chorus,
+.part-btn.bridge { grid-column: span 2; }
+
+.part-btn.active-part {
+    outline: 4px solid white;
+    outline-offset: 3px;
+    box-shadow: 0 0 18px rgba(255,255,255,0.55);
+}
+
+.part-btn.pulsing {
+    animation: btnPulse 0.4s ease;
+}
+@keyframes btnPulse {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(0.93); box-shadow: 0 0 24px rgba(255,255,255,0.7); }
+    100% { transform: scale(1); }
+}
+
+.part-btn.clear { background-color: #555555; border-color: #777777; }
+
+.back-btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: transparent;
+}
+
+.back-btn.floating {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 0.9rem;
+    padding: 8px 15px;
+    border: 1px solid rgba(255,255,255,0.3);
+    z-index: 10;
+}
+
+.display-mode h1 {
+    font-size: 8vw;
+    margin: 0;
+    transition: all 0.4s ease;
+}
+
+#display-song-tag {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.4);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    z-index: 5;
+}
+
+/* ==== 反覆提示效果 ==== */
+#repeat-ring {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 80;
+    opacity: 0;
+}
+@keyframes ringPulse {
+    0%   { box-shadow: inset 0 0 0  0px rgba(255,255,255,0);    opacity: 0; }
+    10%  { box-shadow: inset 0 0 0 30px rgba(255,255,255,0.8);  opacity: 1; }
+    100% { box-shadow: inset 0 0 0  0px rgba(255,255,255,0);    opacity: 0; }
+}
+.do-ring { animation: ringPulse 2s ease-out forwards; }
+
+#repeat-badge {
+    position: fixed;
+    top: -95px;
+    right: 20px;
+    background: white;
+    color: #222;
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding: 14px 22px;
+    border-radius: 0 0 18px 18px;
+    pointer-events: none;
+    z-index: 90;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    /* 確保移除動畫類別時瞬間歸位，不使用 transition */
+}
+@keyframes badgeSlide {
+    0%   { top: -95px; opacity: 0; }
+    10%  { top: 0;     opacity: 1; }
+    90%  { top: 0;     opacity: 1; }
+    100% { top: -95px; opacity: 0; }
+}
+.do-badge { animation: badgeSlide 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+/* AHK 觸發指示燈 (單一方塊) */
+.ahk-group {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    display: none;
+    z-index: 100;
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.display-mode .ahk-group {
+    display: flex;
+}
+
+.ahk-indicator {
+    width: 65px;
+    height: 65px;
+    background-color: #FF0000; /* 預設紅色 */
+    border-radius: 9px;
+}
+
+#ahk-repeat-toggle {
+    transition: background-color 0.05s; /* 讓閃爍更乾脆 */
+}
+
+@media (max-width: 480px) {
+    h1 { font-size: 1.2rem; }
+    .screen { padding: 8px; }
+    .part-btn { padding: 30px 5px; font-size: 1.4rem; } /* 手機版按鈕甚至可以更大 */
+    .display-mode h1 { font-size: 20vw; }
+}
+
+.display-mode {
+    overflow: hidden !important;
+    justify-content: center !important;
+}

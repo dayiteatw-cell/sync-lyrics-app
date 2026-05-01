@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>同步歌詞區塊顯示</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app" class="container">
+        <!-- 角色選擇畫面 -->
+        <div id="role-selection" class="screen active">
+            <h1>請選擇您的角色</h1>
+            <div class="buttons">
+                <button onclick="selectRole('controller')">📱 主唱 (控制端)</button>
+                <button onclick="selectRole('display')">💻 副唱 / 鋼琴 / 螢幕 (顯示端)</button>
+            </div>
+        </div>
+
+        <!-- 主唱控制畫面 -->
+        <div id="controller-screen" class="screen">
+            <h1>主唱控制面板</h1>
+            
+            <p>點擊按鈕切換段落（換首歌請由電腦端操作）。</p>
+            <div class="control-grid">
+                <button class="part-btn verse"      onclick="changePart('verse',      '#4A90E2', '主歌 (Verse)')">主歌 (Verse)</button>
+                <button class="part-btn verse2"     onclick="changePart('verse2',     '#E67E22', '主歌二 (Verse 2)')">主歌二<br><small>Verse 2</small></button>
+                <button class="part-btn pre-chorus" onclick="changePart('pre-chorus', '#8E44AD', '導歌 (Pre-Chorus)')">導歌<br><small>Pre-Chorus</small></button>
+                <button class="part-btn chorus"     onclick="changePart('chorus',     '#2ECC71', '副歌 (Chorus)')">副歌 (Chorus)</button>
+                <button class="part-btn bridge"     onclick="changePart('bridge',     '#1A5276', '橋段 (Bridge)')">橋段 (Bridge)</button>
+                <button class="part-btn clear"      onclick="changePart('clear',      '#333333', '等待中...')">清除 (等待中)</button>
+                <button class="part-btn outro"      onclick="changePart('outro',      '#F06292', '尾句 (Outro)')">尾句<br><small>Outro</small></button>
+            </div>
+            <button class="back-btn" onclick="goBack()">返回</button>
+        </div>
+
+        <!-- 顯示畫面 -->
+        <div id="display-screen" class="screen display-mode">
+            <!-- 顯示目前是第幾首的小標籤 -->
+            <div id="display-song-tag">第 1 首</div>
+            <h1 id="current-part-text">等待中...</h1>
+            <button class="back-btn floating" onclick="goBack()">返回</button>
+            
+            <!-- AHK 觸發指示燈 (平時白色，反覆時紅/黃切換) -->
+            <div class="ahk-group">
+                <div id="ahk-repeat-toggle" class="ahk-indicator"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 反覆提示元素（body 層級，跨畫面有效）-->
+    <div id="repeat-ring"></div>
+    <div id="repeat-badge">🔁 反覆</div>
+    
+    <!-- 強制不休眠用的隱形影片 (內嵌 Data URI 確保離線可用) -->
+    <video id="no-sleep-video" loop playsinline muted style="position:fixed; top:0; left:0; width:1px; height:1px; opacity:0.01; pointer-events:none;">
+        <source src="data:video/mp4;base64,AAAAHGZ0eXBtcDQyAAAAAG1wNDJpc29tYXZjMQAAAAptb292AAAAbG12aGQAAAAA3u9vYN7vb2AAAAAAUAAAAUAAAQAAUUAAUUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAUUAAVUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAHptcmFoAAAAbHRyY2sAAABhbmtoZAAAAADe729g3u9vYAAAAAABAAAAAAAAAQAAUUAAUUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAUUAAVUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAGdlZHRzAAAAHmVsc3QAAAAAAAAAAQAAUUAAUUAAAAAAAQAAAAAAAGJtZGlhAAAAIG1kaGQAAAAA3u9vYN7vb2AAAABAAAAAQAAAABUAAAAAAAAAaGRscgAAAAAAAAAAdmlkZQAAAAAAAAAAAAAAAFZpZGVvSGFuZGxlcgAAAAF0bWluZgAAABZ2bWhkAAAAAQAAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAAVRzdGJsAAAAm3N0c2QAAAAAAAAAAQAAAIthdmMxAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAFAAUABIAAAASAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGP//AAAALmF2Y0MBQsAN/+EAFWfIA0L9AAsB/v8AAAALAAAAAQAAH4fA8sgAAAAAc3R0cwAAAAAAAAABAAAAAQAAFAAAABxzdHNjAAAAAAAAAAEAAAABAAAAAQAAAAEAAAAUc3RzeQAAAAAAAAABAAAAAQAAABRzdHN6AAAAAAAAAAYAAAAFAAAAABRzdGNvAAAAAAAAAAEAAAA4AAAAYnVkdGEAAABabWV0YQAAAAAAAAAhaGRscgAAAAAAAAAAbWRpciAAAAAAAAAAAAAAAAAAAAAAYXBwbAAAAClpbHN0AAAAlg---m5hbQAAAB5kYXRhAAAAAQAAAAAAVmlkZW9IYW5kbGVy" type="video/mp4">
+    </video>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

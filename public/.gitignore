@@ -1,0 +1,6 @@
+node_modules/
+*.ahk
+config.txt
+public/music/
+public/assets/
+*.mp4
