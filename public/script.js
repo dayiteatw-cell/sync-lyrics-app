@@ -342,3 +342,11 @@ function startPhysicalKeepAlive() {
         document.body.style.opacity = document.body.style.opacity === '0.99' ? '1.0' : '0.99';
     }, 1000);
 }
+
+// --- 鍵盤熱鍵監聽 ---
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && ['1', '2', '3'].includes(e.key)) {
+        e.preventDefault(); // 防止瀏覽器切換分頁
+        setSong(parseInt(e.key));
+    }
+});
