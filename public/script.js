@@ -117,14 +117,7 @@ async function selectRole(role) {
     startPhysicalKeepAlive(); // 啟動物理誘騙
     setInterval(requestWakeLock, 20000);
 
-    // 進入全螢幕
-    try {
-        if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen();
-        } else if (document.documentElement.webkitRequestFullscreen) {
-            document.documentElement.webkitRequestFullscreen();
-        }
-    } catch (e) {}
+    // 已移除自動進入全螢幕功能，以維持原有視窗大小
 
     if (role === 'controller') {
         controllerScreen.classList.add('active');
@@ -132,7 +125,12 @@ async function selectRole(role) {
         displayScreen.classList.add('active');
         document.body.classList.add('display-mode');
     }
+    
+    // 進入角色後，立刻套用最後一次接收到的狀態 (解決初始灰色的問題)
+    if (lastStateData) applyState(lastStateData);
 }
+
+let lastStateData = null; // 記錄最新接收到的狀態
 
 // 歌曲切換
 function setSong(num) {
@@ -154,7 +152,7 @@ function updateSongUI() {
     if (activeBtn) activeBtn.classList.add('active');
 
     // 不論是否有段落，都發送一次狀態更新以同步標題
-    const map = { 'verse': 'V', 'verse2': 'V2', 'pre-chorus': 'P', 'chorus': 'C', 'bridge': 'B', 'outro': 'O' };
+    const map = { 'verse': 'V', 'verse2': 'V2', 'pre-chorus': 'P', 'chorus': 'C', 'bridge': 'B', 'outro': 'O', 'part2': '2' };
     const key = `${currentSong}_${map[activePart] || 'V'}`;
     const pages = configData[key] || [];
     
@@ -180,30 +178,7 @@ function goBack() {
     location.reload();
 }
 
-// --- 核心顯示與指示燈控制 ---
-function toggleIndicator(mode) {
-    const indicator = document.getElementById('ahk-repeat-toggle');
-    if (!indicator) return;
 
-    if (mode === 'clear') {
-        indicator.style.backgroundColor = '#FFFFFF';
-        return;
-    }
-
-    // 模式 1: 新段落 (變綠色)
-    if (mode === 'new') {
-        indicator.style.backgroundColor = '#00FF00'; 
-    } 
-    // 模式 2: 反覆 (變紫色)
-    else if (mode === 'repeat') {
-        indicator.style.backgroundColor = '#FF00FF';
-    }
-
-    // 0.5 秒後變回白色，製造「閃爍」效果供 AHK 捕捉
-    setTimeout(() => {
-        indicator.style.backgroundColor = '#FFFFFF';
-    }, 500);
-}
 
 function triggerRepeatFeedback() {
     const activeBtn = document.querySelector('.part-btn.active-part');
@@ -226,21 +201,23 @@ function triggerRepeatDisplay() {
 
 function applyState(data) {
     if (!data || !data.color) return;
+    lastStateData = data; // 儲存最新狀態
     
     // 1. 更新背景色
     if (document.body.classList.contains('display-mode')) {
         document.body.style.backgroundColor = data.color;
+        // 如果是亮黃色 (Part 2)，文字改為深色以利閱讀
+        document.body.style.color = (data.color === '#FFC107') ? '#222' : '#fff';
     }
     
     // 2. 更新文字
     currentPartText.textContent = data.text;
 
     // 3. 處理指示燈與動畫
-    const map = { 'verse': 'V', 'verse2': 'V2', 'pre-chorus': 'P', 'chorus': 'C', 'bridge': 'B', 'outro': 'O' };
+    const map = { 'verse': 'V', 'verse2': 'V2', 'pre-chorus': 'P', 'chorus': 'C', 'bridge': 'B', 'outro': 'O', 'part2': '2' };
     const cmd = `${data.song}_${map[data.activePart] || 'WAIT'}`;
 
     if (data.activePart === 'clear') {
-        toggleIndicator('clear');
         const ring = document.getElementById('repeat-ring');
         const badge = document.getElementById('repeat-badge');
         if (ring) ring.classList.remove('do-ring');
@@ -279,7 +256,7 @@ function changePart(partCode, color, text) {
         socket.emit('repeat');
         triggerRepeatFeedback();
     } else {
-        const map = { 'verse': 'V', 'verse2': 'V2', 'pre-chorus': 'P', 'chorus': 'C', 'bridge': 'B', 'outro': 'O' };
+        const map = { 'verse': 'V', 'verse2': 'V2', 'pre-chorus': 'P', 'chorus': 'C', 'bridge': 'B', 'outro': 'O', 'part2': '2' };
         const key = `${currentSong}_${map[partCode] || 'V'}`;
         const pages = configData[key] || [];
         const firstPage = pages[0] || '';
@@ -308,7 +285,6 @@ socket.on('song-update', (num) => {
 });
 
 socket.on('repeat', () => {
-    toggleIndicator('repeat');
     triggerRepeatDisplay();
 });
 

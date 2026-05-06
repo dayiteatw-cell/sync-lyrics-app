@@ -38,10 +38,11 @@ body {
 }
 
 h1 {
-    font-size: 1.5rem; /* 標題縮小 */
+    font-size: 1.5rem;
+    /* 標題縮小 */
     margin: 0.5rem 0 0.5rem 0;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-    background: rgba(0,0,0,0.2);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.2);
     width: 100%;
     padding: 5px 0;
 }
@@ -103,7 +104,7 @@ button {
 
 button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     background-color: rgba(255, 255, 255, 0.3);
 }
 
@@ -115,50 +116,86 @@ button:active {
 .control-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px; /* 增加間隙防止誤觸 */
+    gap: 15px;
+    /* 增加間隙防止誤觸 */
     width: 100%;
     max-width: 500px;
     margin-bottom: 20px;
 }
 
 .part-btn {
-    padding: 25px 10px; /* 恢復較大的高度，增加命中率 */
+    padding: 25px 10px;
+    /* 恢復較大的高度，增加命中率 */
     font-size: 1.4rem;
     border: none;
     color: white;
     font-weight: bold;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
-    border-radius: 15px; /* 圓角明顯一點 */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    border-radius: 15px;
+    /* 圓角明顯一點 */
 }
 
-.part-btn.verse      { background-color: #4A90E2; }
-.part-btn.verse2     { background-color: #E67E22; }
-.part-btn.pre-chorus { background-color: #8E44AD; }
-.part-btn.chorus     { background-color: #2ECC71; }
-.part-btn.outro      { background-color: #F06292; }
-.part-btn.bridge     { background-color: #1A5276; }
+.part-btn.verse {
+    background-color: #4A90E2;
+}
+
+.part-btn.verse2 {
+    background-color: #E67E22;
+}
+
+.part-btn.pre-chorus {
+    background-color: #8E44AD;
+}
+
+.part-btn.chorus {
+    background-color: #2ECC71;
+}
+
+.part-btn.outro {
+    background-color: #F06292;
+}
+
+.part-btn.bridge {
+    background-color: #1A5276;
+}
 
 /* 恢復原本排列：主要段落佔滿兩列 */
 .part-btn.verse,
 .part-btn.chorus,
-.part-btn.bridge { grid-column: span 2; }
+.part-btn.bridge {
+    grid-column: span 2;
+}
 
 .part-btn.active-part {
     outline: 4px solid white;
     outline-offset: 3px;
-    box-shadow: 0 0 18px rgba(255,255,255,0.55);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.55);
 }
 
 .part-btn.pulsing {
     animation: btnPulse 0.4s ease;
 }
+
 @keyframes btnPulse {
-    0%   { transform: scale(1); }
-    40%  { transform: scale(0.93); box-shadow: 0 0 24px rgba(255,255,255,0.7); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    40% {
+        transform: scale(0.93);
+        box-shadow: 0 0 24px rgba(255, 255, 255, 0.7);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
-.part-btn.clear { background-color: #555555; border-color: #777777; }
+.part-btn.part2 {
+    background-color: #FFC107;
+    color: #222;
+    text-shadow: none;
+}
 
 .back-btn {
     font-size: 1rem;
@@ -172,7 +209,7 @@ button:active {
     left: 20px;
     font-size: 0.9rem;
     padding: 8px 15px;
-    border: 1px solid rgba(255,255,255,0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     z-index: 10;
 }
 
@@ -205,12 +242,27 @@ button:active {
     z-index: 80;
     opacity: 0;
 }
+
 @keyframes ringPulse {
-    0%   { box-shadow: inset 0 0 0  0px rgba(255,255,255,0);    opacity: 0; }
-    10%  { box-shadow: inset 0 0 0 30px rgba(255,255,255,0.8);  opacity: 1; }
-    100% { box-shadow: inset 0 0 0  0px rgba(255,255,255,0);    opacity: 0; }
+    0% {
+        box-shadow: inset 0 0 0 0px rgba(255, 255, 255, 0);
+        opacity: 0;
+    }
+
+    10% {
+        box-shadow: inset 0 0 0 30px rgba(255, 255, 255, 0.8);
+        opacity: 1;
+    }
+
+    100% {
+        box-shadow: inset 0 0 0 0px rgba(255, 255, 255, 0);
+        opacity: 0;
+    }
 }
-.do-ring { animation: ringPulse 2s ease-out forwards; }
+
+.do-ring {
+    animation: ringPulse 4s ease-out forwards;
+}
 
 #repeat-badge {
     position: fixed;
@@ -224,49 +276,54 @@ button:active {
     border-radius: 0 0 18px 18px;
     pointer-events: none;
     z-index: 90;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
     /* 確保移除動畫類別時瞬間歸位，不使用 transition */
 }
+
 @keyframes badgeSlide {
-    0%   { top: -95px; opacity: 0; }
-    10%  { top: 0;     opacity: 1; }
-    90%  { top: 0;     opacity: 1; }
-    100% { top: -95px; opacity: 0; }
-}
-.do-badge { animation: badgeSlide 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    0% {
+        top: -95px;
+        opacity: 0;
+    }
 
-/* AHK 觸發指示燈 (單一方塊) */
-.ahk-group {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    display: none;
-    z-index: 100;
-    border: 3px solid rgba(255, 255, 255, 0.6);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-}
+    10% {
+        top: 0;
+        opacity: 1;
+    }
 
-.display-mode .ahk-group {
-    display: flex;
+    90% {
+        top: 0;
+        opacity: 1;
+    }
+
+    100% {
+        top: -95px;
+        opacity: 0;
+    }
 }
 
-.ahk-indicator {
-    width: 65px;
-    height: 65px;
-    background-color: #FF0000; /* 預設紅色 */
-    border-radius: 9px;
-}
-
-#ahk-repeat-toggle {
-    transition: background-color 0.05s; /* 讓閃爍更乾脆 */
+.do-badge {
+    animation: badgeSlide 4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @media (max-width: 480px) {
-    h1 { font-size: 1.2rem; }
-    .screen { padding: 8px; }
-    .part-btn { padding: 30px 5px; font-size: 1.4rem; } /* 手機版按鈕甚至可以更大 */
-    .display-mode h1 { font-size: 20vw; }
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .screen {
+        padding: 8px;
+    }
+
+    .part-btn {
+        padding: 30px 5px;
+        font-size: 1.4rem;
+    }
+
+    /* 手機版按鈕甚至可以更大 */
+    .display-mode h1 {
+        font-size: 20vw;
+    }
 }
 
 .display-mode {
