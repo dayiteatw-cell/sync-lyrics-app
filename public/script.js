@@ -152,7 +152,7 @@ function updateSongUI() {
     if (activeBtn) activeBtn.classList.add('active');
 
     // 不論是否有段落，都發送一次狀態更新以同步標題
-    const map = { 'verse': 'V', 'verse2': 'V2', 'pre-chorus': 'P', 'chorus': 'C', 'bridge': 'B', 'outro': 'O', 'part2': '2' };
+    const map = { 'verse': 'V', 'verse2': 'V2', 'pre-chorus': 'P', 'chorus': 'C', 'bridge': 'B', 'outro': 'E', 'part2': '2' };
     const key = `${currentSong}_${map[activePart] || 'V'}`;
     const pages = configData[key] || [];
     
@@ -214,7 +214,7 @@ function applyState(data) {
     currentPartText.textContent = data.text;
 
     // 3. 處理指示燈與動畫
-    const map = { 'verse': 'V', 'verse2': 'V2', 'pre-chorus': 'P', 'chorus': 'C', 'bridge': 'B', 'outro': 'O', 'part2': '2' };
+    const map = { 'verse': 'V', 'verse2': 'V2', 'pre-chorus': 'P', 'chorus': 'C', 'bridge': 'B', 'outro': 'E', 'part2': '2' };
     const cmd = `${data.song}_${map[data.activePart] || 'WAIT'}`;
 
     if (data.activePart === 'clear') {
@@ -256,7 +256,7 @@ function changePart(partCode, color, text) {
         socket.emit('repeat');
         triggerRepeatFeedback();
     } else {
-        const map = { 'verse': 'V', 'verse2': 'V2', 'pre-chorus': 'P', 'chorus': 'C', 'bridge': 'B', 'outro': 'O', 'part2': '2' };
+        const map = { 'verse': 'V', 'verse2': 'V2', 'pre-chorus': 'P', 'chorus': 'C', 'bridge': 'B', 'outro': 'E', 'part2': '2' };
         const key = `${currentSong}_${map[partCode] || 'V'}`;
         const pages = configData[key] || [];
         const firstPage = pages[0] || '';
