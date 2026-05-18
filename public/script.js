@@ -135,6 +135,7 @@ let lastStateData = null; // 記錄最新接收到的狀態
 // 歌曲切換
 function setSong(num) {
     currentSong = num;
+    activePart = 'clear'; // 切換歌曲時，重置段落為等待狀態
     updateSongUI();
     socket.emit('change-song', num);
 }
